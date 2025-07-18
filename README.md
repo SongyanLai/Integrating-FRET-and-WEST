@@ -5,9 +5,9 @@
 This is [Songyan Lai](https://songyanlai.github.io/)'s final year project for his undergraduate degree in Computer Science at the National University of Ireland Maynooth.
 
 - **Contact**:  
-  📧 laisongyan@foxmail.com  
-  📧 SONGYAN.LAI.2024@mumail.ie
-- **Maynoooth University Student ID**: 24250371
+ 📧 laisongyan@foxmail.com  
+ 📧 SONGYAN.LAI.2024@mumail.ie
+<!-- - **Maynoooth University Student ID**: 24250371 -->
 - **Supervisor**: [Prof. Rosemary Monahan](https://www.maynoothuniversity.ie/faculty-science-engineering/our-people/rosemary-monahan)
 - **Project Type**: Research
 
