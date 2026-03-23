@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRET2WEST MLTL Converter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      textarea,
+      pre {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        margin-bottom: 20px;
+      }
+      .info-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+      }
+      .info-box h4 {
+        margin: 0 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>FRET2WEST MLTL Converter</h2>
+    <h3>Manual Formula Input</h3>
+    <textarea
+      id="manualInput"
+      rows="6"
+      placeholder="Enter FRET formula here..."
+    ></textarea>
+    <button onclick="convertManualInput()">Convert Formula</button>
+    <button onclick="copyToClipboard()">Copy Result</button>
+
+    <div class="info-box" id="ignoredSymbolsBox" style="display: none">
+      <h4>Ignored Time Operators</h4>
+      <ul id="ignoredSymbolsList"></ul>
+    </div>
+
+    <h3>Conversion Steps</h3>
+    <pre id="conversionSteps"></pre>
+
+    <h3>MLTL Output</h3>
+    <pre id="mltlOutput"></pre>
+
+    <h3>Variable Mapping</h3>
+    <div id="variableMapping" class="info-box" style="display: none"></div>
+
+    <script src="converter.js"></script>
+
+    <script>
+      // Responsible for connecting the interface and the logic of the core transformer
+      function convertManualInput() {
+        const manualInput = document.getElementById("manualInput").value;
+        if (!manualInput) {
+          alert("Please enter a formula.");
+          return;
+        }
+
+        // 1. Call the core function in converter.js
+        const result = fretToMltlConverter(manualInput);
+
+        // 2. Display the result on the webpage
+        document.getElementById("mltlOutput").textContent =
+          `Converted Formula: ${result.formula}`;
+
+        // Print conversion steps
+        let stepsText = "";
+        result.steps.forEach((s) => (stepsText += `${s.step}: ${s.formula}\n`));
+        document.getElementById("conversionSteps").textContent = stepsText;
+
+        // Print ignored symbols
+        const ignoredBox = document.getElementById("ignoredSymbolsBox");
+        const ignoredList = document.getElementById("ignoredSymbolsList");
+        if (result.ignoredSymbols.length > 0) {
+          ignoredBox.style.display = "block";
+          ignoredList.innerHTML = "";
+          result.ignoredSymbols.forEach((item) => {
+            ignoredList.innerHTML += `<li><strong>${item.symbol}</strong>: ${item.meaning}</li>`;
+          });
+        } else {
+          ignoredBox.style.display = "none";
+        }
+
+        // Print variable mapping
+        const varMappingDiv = document.getElementById("variableMapping");
+        if (Object.keys(result.variableMap).length > 0) {
+          varMappingDiv.style.display = "block";
+          varMappingDiv.innerHTML = "<h4>Variable Mapping</h4>";
+          Object.entries(result.variableMap).forEach(([original, standard]) => {
+            varMappingDiv.innerHTML += `<p><strong>${standard}:</strong> ${original}</p>`;
+          });
+        } else {
+          varMappingDiv.style.display = "none";
+        }
+      }
+
+      function copyToClipboard() {
+        const output = document.getElementById("mltlOutput").textContent;
+        if (!output) {
+          alert("No conversion result to copy.");
+          return;
+        }
+        navigator.clipboard
+          .writeText(output.replace("Converted Formula: ", ""))
+          .then(() => alert("Result copied to clipboard!"))
+          .catch((err) => alert("Failed to copy: " + err));
+      }
+    </script>
+  </body>
+</html>
